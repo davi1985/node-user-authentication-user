@@ -1,9 +1,15 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
+import { statusRoute } from './routes/status.route';
+import { usersRoute } from './routes/users.route';
 
+// Global Middleware
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get('/status', (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).send({ foo: 'bar' });
-});
+// Routers
+app.use(usersRoute);
+app.use(statusRoute);
 
+// Server start
 app.listen(3333, () => console.log('Server is runnning'));
