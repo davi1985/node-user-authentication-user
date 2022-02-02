@@ -1,0 +1,16 @@
+{
+  "name": "ms-authentication",
+  "version": "1.0.0",
+  "description": "Microservice de Autenticaçao",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node ./",
+    "build": "tsc -p ."
+  },
+  "author": "Davi P Silva",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}
