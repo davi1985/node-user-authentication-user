@@ -1,5 +1,6 @@
 import { User } from '../models/user-model';
 import { db } from '../db';
+import { DatabaseError } from '../models/errors/database-error-model';
 
 export class UserRepository {
   async findAllUsers(): Promise<User[]> {
@@ -11,13 +12,17 @@ export class UserRepository {
   }
 
   async findById(uuid: string): Promise<User> {
-    const query = `SELECT uuid, username FROM application_user WHERE uuid = $1`;
+    try {
+      const query = `SELECT uuid, username FROM application_user WHERE uuid = $1`;
 
-    const { rows } = await db.query<User>(query, [uuid]);
+      const { rows } = await db.query<User>(query, [uuid]);
 
-    const [user] = rows;
+      const [user] = rows;
 
-    return user;
+      return user;
+    } catch (error) {
+      throw new DatabaseError('User not found with ID informed', error);
+    }
   }
 
   async create(user: User): Promise<string> {

@@ -8,6 +8,7 @@
 
 import { NextFunction, Request, Response, Router } from 'express';
 import STATUS_CODE from 'http-status-codes';
+import { DatabaseError } from '../models/errors/database-error-model';
 
 import { UserRepository } from '../repositories/user-repository';
 
@@ -30,12 +31,16 @@ usersRoute.get(
     response: Response,
     next: NextFunction,
   ) => {
-    const { uuid } = request.params;
+    try {
+      const { uuid } = request.params;
 
-    const userRepository = new UserRepository();
-    const user = await userRepository.findById(uuid);
+      const userRepository = new UserRepository();
+      const user = await userRepository.findById(uuid);
 
-    return response.status(STATUS_CODE.OK).json(user);
+      return response.status(STATUS_CODE.OK).json(user);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
@@ -83,4 +88,5 @@ usersRoute.delete(
     return response.status(STATUS_CODE.OK).json();
   },
 );
+
 export { usersRoute };
