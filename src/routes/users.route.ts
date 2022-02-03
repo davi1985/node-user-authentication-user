@@ -23,20 +23,21 @@ usersRoute.get(
   },
 );
 
-// usersRoute.get(
-//   '/users/:uuid',
-//   (
-//     request: Request<{ uuid: string }>,
-//     response: Response,
-//     next: NextFunction,
-//   ) => {
-//     const { uuid } = request.params;
+usersRoute.get(
+  '/users/:uuid',
+  async (
+    request: Request<{ uuid: string }>,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    const { uuid } = request.params;
 
-//     const user = users.find((user) => user.uuid === uuid);
+    const userRepository = new UserRepository();
+    const user = await userRepository.findById(uuid);
 
-//     return response.status(STATUS_CODE.OK).json(user);
-//   },
-// );
+    return response.status(STATUS_CODE.OK).json(user);
+  },
+);
 
 // usersRoute.post(
 //   '/users',
