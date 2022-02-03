@@ -9,50 +9,50 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import STATUS_CODE from 'http-status-codes';
 
-const usersRoute = Router();
+import { UserRepository } from '../repositories/user-repository';
 
-const users = [
-  { uuid: 'asdf123', username: 'Davi' },
-  { uuid: 'asdf123', username: 'Joelma' },
-];
+const usersRoute = Router();
 
 usersRoute.get(
   '/users',
-  (request: Request, response: Response, next: NextFunction) => {
+  async (request: Request, response: Response, next: NextFunction) => {
+    const userRepository = new UserRepository();
+    const users = await userRepository.findAllUsers();
+
     return response.status(STATUS_CODE.OK).json(users);
   },
 );
 
-usersRoute.get(
-  '/users/:uuid',
-  (
-    request: Request<{ uuid: string }>,
-    response: Response,
-    next: NextFunction,
-  ) => {
-    const { uuid } = request.params;
+// usersRoute.get(
+//   '/users/:uuid',
+//   (
+//     request: Request<{ uuid: string }>,
+//     response: Response,
+//     next: NextFunction,
+//   ) => {
+//     const { uuid } = request.params;
 
-    const user = users.find((user) => user.uuid === uuid);
+//     const user = users.find((user) => user.uuid === uuid);
 
-    return response.status(STATUS_CODE.OK).json(user);
-  },
-);
+//     return response.status(STATUS_CODE.OK).json(user);
+//   },
+// );
 
-usersRoute.post(
-  '/users',
-  (request: Request, response: Response, next: NextFunction) => {
-    const { username } = request.body;
+// usersRoute.post(
+//   '/users',
+//   (request: Request, response: Response, next: NextFunction) => {
+//     const { username } = request.body;
 
-    const user = {
-      uuid: 'asdf1231',
-      username,
-    };
+//     const user = {
+//       uuid: 'asdf1231',
+//       username,
+//     };
 
-    users.push(user);
+//     users.push(user);
 
-    return response.status(STATUS_CODE.CREATED).json(user);
-  },
-);
+//     return response.status(STATUS_CODE.CREATED).json(user);
+//   },
+// );
 
 usersRoute.put(
   '/users/:uuid',
