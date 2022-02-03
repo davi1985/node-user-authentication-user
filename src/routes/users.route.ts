@@ -39,44 +39,46 @@ usersRoute.get(
   },
 );
 
-// usersRoute.post(
-//   '/users',
-//   (request: Request, response: Response, next: NextFunction) => {
-//     const { username } = request.body;
+usersRoute.post(
+  '/users',
+  async (request: Request, response: Response, next: NextFunction) => {
+    const { username, password } = request.body;
 
-//     const user = {
-//       uuid: 'asdf1231',
-//       username,
-//     };
+    const userRepository = new UserRepository();
+    const uuid = await userRepository.create({ username, password });
 
-//     users.push(user);
-
-//     return response.status(STATUS_CODE.CREATED).json(user);
-//   },
-// );
+    return response.status(STATUS_CODE.CREATED).json(uuid);
+  },
+);
 
 usersRoute.put(
   '/users/:uuid',
-  (
+  async (
     request: Request<{ uuid: string }>,
     response: Response,
     next: NextFunction,
   ) => {
     const { uuid } = request.params;
-    const { username } = request.body;
+    const { username, password } = request.body;
 
-    return response.status(STATUS_CODE.OK).json({ uuid, username });
+    const userRepository = new UserRepository();
+    await userRepository.updtate({ username, password, uuid });
+
+    return response.status(STATUS_CODE.OK).json();
   },
 );
 
 usersRoute.delete(
   '/users/:uuid',
-  (
+  async (
     request: Request<{ uuid: string }>,
     response: Response,
     next: NextFunction,
   ) => {
     const { uuid } = request.params;
+
+    const userRepository = new UserRepository();
+    await userRepository.remove(uuid);
 
     return response.status(STATUS_CODE.OK).json();
   },

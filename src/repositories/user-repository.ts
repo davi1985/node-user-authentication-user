@@ -19,4 +19,38 @@ export class UserRepository {
 
     return user;
   }
+
+  async create(user: User): Promise<string> {
+    const query = `
+      INSERT INTO application_user (username, password) VALUES ($1, crypt($2, 'my_salt'))
+      RETURNING uuid
+    `;
+
+    const values = [user.username, user.password];
+
+    const { rows } = await db.query<{ uuid: string }>(query, values);
+
+    const [newUser] = rows;
+
+    return newUser.uuid;
+  }
+
+  async updtate(user: User): Promise<void> {
+    const query = `
+      UPDATE application_user SET username = $1, password = crypt($2, 'my_salt')
+      WHERE uuid = $3
+    `;
+
+    const values = [user.username, user.password, user.uuid];
+
+    await db.query(query, values);
+  }
+
+  async remove(uuid: string): Promise<void> {
+    const query = `
+      DELETE FROM application_user WHERE uuid = $1
+    `;
+
+    await db.query(query, [uuid]);
+  }
 }
