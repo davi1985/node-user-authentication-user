@@ -3,7 +3,7 @@ import JWT from 'jsonwebtoken';
 import { ForbiddenError } from '../models/errors/forbidden-error.model';
 import { UserRepository } from '../repositories/user-repository';
 
-export const bearerAuthenticationMiddleware = async (
+export const JWTAuthenticationMiddleware = async (
   request: Request,
   response: Response,
   next: NextFunction,

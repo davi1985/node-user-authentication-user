@@ -4,6 +4,7 @@ import { ForbiddenError } from '../models/errors/forbidden-error.model';
 import { UserRepository } from '../repositories/user-repository';
 import STATUS_CODE from 'http-status-codes';
 import { basicAuthenticationMiddleware } from '../middlewares/basic-authentication-middleware';
+import { JWTAuthenticationMiddleware } from '../middlewares/jwt-authentication-middleware';
 
 const authorizationRoute = Router();
 
