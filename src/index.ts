@@ -11,9 +11,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routers
-app.use(JWTAuthenticationMiddleware, usersRoute);
 app.use(statusRoute);
 app.use(authorizationRoute);
+
+app.use(JWTAuthenticationMiddleware);
+app.use(usersRoute);
 
 // Middleware ErrorHandler
 app.use(errorHandler);

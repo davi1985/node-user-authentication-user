@@ -9,6 +9,14 @@ import { JWTAuthenticationMiddleware } from '../middlewares/jwt-authentication-m
 const authorizationRoute = Router();
 
 authorizationRoute.post(
+  '/token/validate',
+  JWTAuthenticationMiddleware,
+  async (request: Request, response: Response, next: NextFunction) => {
+    response.sendStatus(STATUS_CODE.OK);
+  },
+);
+
+authorizationRoute.post(
   '/token',
   basicAuthenticationMiddleware,
   async (request: Request, response: Response, next: NextFunction) => {
