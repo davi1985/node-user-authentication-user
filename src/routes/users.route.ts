@@ -17,8 +17,6 @@ const usersRoute = Router();
 usersRoute.get(
   '/users',
   async (request: Request, response: Response, next: NextFunction) => {
-    console.log(request.headers['authorization']);
-
     const userRepository = new UserRepository();
     const users = await userRepository.findAllUsers();
 
