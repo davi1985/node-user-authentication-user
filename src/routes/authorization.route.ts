@@ -1,41 +1,30 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import JWT from 'jsonwebtoken';
 import { ForbiddenError } from '../models/errors/forbidden-error.model';
 import { UserRepository } from '../repositories/user-repository';
+import STATUS_CODE from 'http-status-codes';
+import { basicAuthenticationMiddleware } from '../middlewares/basic-authentication-middleware';
 
 const authorizationRoute = Router();
 
 authorizationRoute.post(
   '/token',
+  basicAuthenticationMiddleware,
   async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const authorizationHeader = request.headers['authorization'];
+      const user = request.user;
 
-      if (!authorizationHeader) {
-        throw new ForbiddenError('Credentials not informed');
+      if (!user) {
+        throw new ForbiddenError('User not informed.');
       }
 
-      const [authenticationType, token] = authorizationHeader?.split(' ');
+      const jwtPayload = { username: user.username };
+      const jwtOptions = { subject: user?.uuid };
+      const secretKey = 'my_secret_key';
 
-      if (authenticationType !== 'Basic' || !token) {
-        throw new ForbiddenError('Authentication type invalid.');
-      }
+      const jwt = JWT.sign(jwtPayload, secretKey, jwtOptions);
 
-      const tokenContent = Buffer.from(token, 'base64').toString('utf-8');
-
-      const [username, password] = tokenContent.split(':');
-
-      if (!username || !password) {
-        throw new ForbiddenError('Credentials are empty.');
-      }
-
-      const usersRepository = new UserRepository();
-
-      const userFounded = await usersRepository.findByUserNameAndPassword(
-        username,
-        password,
-      );
-
-      console.log(userFounded);
+      return response.status(STATUS_CODE.OK).json({ token: jwt });
     } catch (error) {
       next(error);
     }
