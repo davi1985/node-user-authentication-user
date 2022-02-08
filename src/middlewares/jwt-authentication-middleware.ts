@@ -5,7 +5,7 @@ import { UserRepository } from '../repositories/user-repository';
 
 export const JWTAuthenticationMiddleware = async (
   request: Request,
-  response: Response,
+  _: Response,
   next: NextFunction,
 ) => {
   try {

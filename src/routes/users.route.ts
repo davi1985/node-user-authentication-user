@@ -8,21 +8,17 @@
 
 import { NextFunction, Request, Response, Router } from 'express';
 import STATUS_CODE from 'http-status-codes';
-import { DatabaseError } from '../models/errors/database-error-model';
 
 import { UserRepository } from '../repositories/user-repository';
 
 const usersRoute = Router();
 
-usersRoute.get(
-  '/users',
-  async (request: Request, response: Response, next: NextFunction) => {
-    const userRepository = new UserRepository();
-    const users = await userRepository.findAllUsers();
+usersRoute.get('/users', async (_: Request, response: Response) => {
+  const userRepository = new UserRepository();
+  const users = await userRepository.findAllUsers();
 
-    return response.status(STATUS_CODE.OK).json(users);
-  },
-);
+  return response.status(STATUS_CODE.OK).json(users);
+});
 
 usersRoute.get(
   '/users/:uuid',
@@ -44,17 +40,14 @@ usersRoute.get(
   },
 );
 
-usersRoute.post(
-  '/users',
-  async (request: Request, response: Response, next: NextFunction) => {
-    const { username, password } = request.body;
+usersRoute.post('/users', async (request: Request, response: Response) => {
+  const { username, password } = request.body;
 
-    const userRepository = new UserRepository();
-    const uuid = await userRepository.create({ username, password });
+  const userRepository = new UserRepository();
+  const uuid = await userRepository.create({ username, password });
 
-    return response.status(STATUS_CODE.CREATED).json(uuid);
-  },
-);
+  return response.status(STATUS_CODE.CREATED).json(uuid);
+});
 
 usersRoute.put(
   '/users/:uuid',

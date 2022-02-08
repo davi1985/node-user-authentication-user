@@ -11,7 +11,7 @@ const authorizationRoute = Router();
 authorizationRoute.post(
   '/token/validate',
   JWTAuthenticationMiddleware,
-  async (request: Request, response: Response, next: NextFunction) => {
+  async (_: Request, response: Response) => {
     response.sendStatus(STATUS_CODE.OK);
   },
 );

@@ -4,7 +4,7 @@ import { UserRepository } from '../repositories/user-repository';
 
 export const basicAuthenticationMiddleware = async (
   request: Request,
-  reponse: Response,
+  _: Response,
   next: NextFunction,
 ) => {
   try {
